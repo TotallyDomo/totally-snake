@@ -5,9 +5,6 @@ using UnityEngine;
 public class Snake : MonoBehaviour
 {
     [SerializeField]
-    int Length;
-
-    [SerializeField]
     GameObject CellPrefab;
 
     List<GameObject> Body;
@@ -19,12 +16,10 @@ public class Snake : MonoBehaviour
         Direction = new Vector2Int(0, 1);
         Body = new List<GameObject>();
 
-        for (int i = 0; i < Length; i++)
+        // Fancy way of iterating over all child-objects
+        foreach (Transform child in transform)
         {
-            var cell = Instantiate(CellPrefab, gameObject.transform, false);
-            cell.name = $"{i}";
-            cell.transform.localPosition = 100f * i * Vector3.up;
-            Body.Add(cell);
+            Body.Add(child.gameObject);
         }
 
         Clock.OnTick += Move;

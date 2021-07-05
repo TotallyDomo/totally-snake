@@ -10,21 +10,23 @@ public class Snake : MonoBehaviour
     [SerializeField]
     GameObject CellPrefab;
 
-    LinkedList<GameObject> Body;
+    List<GameObject> Body;
 
     public Vector2Int Direction { get; private set; }
 
     void Awake()
     {
         Direction = new Vector2Int(0, 1);
-        Body = new LinkedList<GameObject>();
+        Body = new List<GameObject>();
+
         for (int i = 0; i < Length; i++)
         {
-            var cell = Instantiate(CellPrefab, gameObject.transform);
+            var cell = Instantiate(CellPrefab, gameObject.transform, false);
             cell.name = $"{i}";
-            cell.transform.position = Vector3.up * i * 100f;
-            Body.AddFirst(cell);
+            cell.transform.localPosition = Vector3.up * i * 100f;
+            Body.Add(cell);
         }
+
         Clock.OnTick += Move;
     }  
 
@@ -36,16 +38,13 @@ public class Snake : MonoBehaviour
 
     void Move()
     {
-        var head = Body.First;
-        var prevPos = head.Value.transform.position;
-        head.Value.transform.position += (new Vector3(Direction.x, Direction.y, 0) * 50f);
-        var next = head.Next;
-        while (next != null)
+        var prevPos = Body[0].transform.position;
+        Body[0].transform.position += new Vector3(Direction.x, Direction.y, 0) * 50f;
+        for (int i = 1; i < Body.Count; i++)
         {
-            var tempPos = next.Value.transform.position;
-            next.Value.transform.position = prevPos;
+            var tempPos = Body[i].transform.position;
+            Body[i].transform.position = prevPos;
             prevPos = tempPos;
-            next = next.Next;
         }
     }
 }

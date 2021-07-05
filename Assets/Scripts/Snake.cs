@@ -23,7 +23,7 @@ public class Snake : MonoBehaviour
         {
             var cell = Instantiate(CellPrefab, gameObject.transform, false);
             cell.name = $"{i}";
-            cell.transform.localPosition = Vector3.up * i * 100f;
+            cell.transform.localPosition = 100f * i * Vector3.up;
             Body.Add(cell);
         }
 

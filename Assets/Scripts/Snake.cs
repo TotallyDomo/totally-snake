@@ -2,24 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(MapGrid))]
 public class Snake : MonoBehaviour
 {
-    [SerializeField]
-    GameObject CellPrefab;
+    public Vector2Int Direction { get; private set; }
 
     List<GameObject> Body;
-
-    public Vector2Int Direction { get; private set; }
+    MapGrid grid;
 
     void Awake()
     {
         Direction = new Vector2Int(0, 1);
         Body = new List<GameObject>();
+        grid = GetComponent<MapGrid>();
 
         // Fancy way of iterating over all child-objects
         foreach (Transform child in transform)
         {
-            Body.Add(child.gameObject);
+            if (child.CompareTag("SnakeCell"))
+                Body.Add(child.gameObject);
         }
 
         Clock.OnTick += Move;
@@ -34,7 +35,10 @@ public class Snake : MonoBehaviour
     void Move()
     {
         var prevPos = Body[0].transform.position;
-        Body[0].transform.position += new Vector3(Direction.x, Direction.y, 0) * 50f;
+        Body[0].transform.position += new Vector3(
+            Direction.x * grid.cellSize.x / 2,
+            Direction.y * grid.cellSize.y / 2);
+
         for (int i = 1; i < Body.Count; i++)
         {
             var tempPos = Body[i].transform.position;

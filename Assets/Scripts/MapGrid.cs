@@ -13,9 +13,6 @@ public class MapGrid : MonoBehaviour
 
     public GameObject[,] Grid { get; private set; }
 
-    float HalfWidth => rectTransform.rect.width / 2f;
-    float HalfHeight => rectTransform.rect.height / 2f;
-
     void Awake()
     {
         Grid = new GameObject[GridSize.x, GridSize.y];
@@ -24,10 +21,10 @@ public class MapGrid : MonoBehaviour
             Mathf.FloorToInt(rectTransform.rect.width / GridSize.x),
             Mathf.FloorToInt(rectTransform.rect.height / GridSize.y));
 
-        OnTransformChildrenChanged();
+        Clock.OnTick += UpdateGrid;
     }
 
-    void OnTransformChildrenChanged()
+    void UpdateGrid()
     {
         var children = GetComponentsInChildren<RectTransform>();
         foreach (RectTransform child in children)
@@ -36,8 +33,11 @@ public class MapGrid : MonoBehaviour
                 continue;
 
             Vector2Int cell = LocalToGrid(child.anchoredPosition);
-            Grid[cell.x, cell.y] = child.gameObject;
-            Debug.Log($"{Grid[cell.x, cell.y]}: {cell.x} {cell.y}");
+            if (cell.x > GridSize.x || cell.y > GridSize.y)
+                Debug.LogError("GameOver not implemented yet.");
+            else
+                Grid[cell.x, cell.y] = child.gameObject;
+            //Debug.Log($"{child.anchoredPosition}: {cell.x} {cell.y}");
         }
     }
 

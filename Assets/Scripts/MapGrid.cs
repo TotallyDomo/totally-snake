@@ -41,8 +41,8 @@ public class MapGrid : MonoBehaviour
         }
     }
 
-    int CellX(float x) => Mathf.CeilToInt(x / cellSize.x);
-    int CellY(float y) => Mathf.CeilToInt(y / cellSize.y);
+    int CellX(float x) => Mathf.RoundToInt(x / cellSize.x);
+    int CellY(float y) => Mathf.RoundToInt(y / cellSize.y); 
 
     Vector2Int LocalToGrid(Vector2 localPos) => new Vector2Int(CellX(localPos.x), CellY(localPos.y));
 }

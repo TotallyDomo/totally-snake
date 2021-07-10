@@ -7,23 +7,23 @@ public class Snake : MonoBehaviour
 {
     public Vector2Int Direction { get; private set; }
 
-    List<GameObject> Body;
+    List<RectTransform> Body;
     MapGrid grid;
 
     void Awake()
     {
         Direction = new Vector2Int(0, 1);
-        Body = new List<GameObject>();
+        Body = new List<RectTransform>();
         grid = GetComponent<MapGrid>();
 
         // Fancy way of iterating over all child-objects
-        foreach (Transform child in transform)
+        foreach (RectTransform child in transform)
         {
             if (child.CompareTag("SnakeCell"))
-                Body.Add(child.gameObject);
+                Body.Add(child);
         }
 
-        Clock.OnTick += Move;
+        Clock.OnTick += MoveBody;
     }  
 
     public void UpdateDirection(Vector2Int dir)
@@ -32,18 +32,22 @@ public class Snake : MonoBehaviour
             Direction = dir;
     }
 
-    void Move()
+    void MoveBody()
     {
-        var prevPos = Body[0].transform.position;
-        Body[0].transform.position += new Vector3(
-            Direction.x * grid.cellSize.x / 2,
-            Direction.y * grid.cellSize.y / 2);
+        var prevPos = Body[0].anchoredPosition;
+        MoveHead();
 
         for (int i = 1; i < Body.Count; i++)
         {
-            var tempPos = Body[i].transform.position;
-            Body[i].transform.position = prevPos;
+            var tempPos = Body[i].anchoredPosition;
+            Body[i].anchoredPosition = prevPos;
             prevPos = tempPos;
         }
+    }
+
+    void MoveHead()
+    {
+        var headCellPos = MapGrid.LocalToGrid(Body[0].anchoredPosition);
+        Body[0].anchoredPosition = MapGrid.GridToLocal(headCellPos += Direction);
     }
 }

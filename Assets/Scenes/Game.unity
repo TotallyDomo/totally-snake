@@ -874,6 +874,7 @@ GameObject:
   - component: {fileID: 1128715164}
   - component: {fileID: 1128715166}
   - component: {fileID: 1128715163}
+  - component: {fileID: 1128715167}
   m_Layer: 5
   m_Name: MapGrid
   m_TagString: Untagged
@@ -963,6 +964,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ed804a8c5a36cf747bc67b8a8c4ae084, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1128715167
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1128715161}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c39e9a6f7c2a8ef47a3c7cd9f7ac9b77, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CellPrefab: {fileID: 5866381950190066281, guid: 58ae999ea48768140a5e2ba4b60955bf, type: 3}
+  FoodPrefab: {fileID: 4276243834452200162, guid: c197eb62b3e238d49b8170ee7c40600d, type: 3}
 --- !u!1 &1611538561
 GameObject:
   m_ObjectHideFlags: 0

@@ -2,19 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(MapGrid))]
+[RequireComponent(typeof(MapGrid), typeof(Spawner))]
 public class Snake : MonoBehaviour
 {
     public Vector2Int Direction { get; private set; }
 
     List<RectTransform> Body;
-    MapGrid grid;
+    MapGrid mapGrid;
+    Spawner spawner;
 
     void Awake()
     {
         Direction = new Vector2Int(0, 1);
         Body = new List<RectTransform>();
-        grid = GetComponent<MapGrid>();
+        mapGrid = GetComponent<MapGrid>();
+        spawner = GetComponent<Spawner>();
 
         // Fancy way of iterating over all child-objects
         foreach (RectTransform child in transform)
@@ -23,7 +25,7 @@ public class Snake : MonoBehaviour
                 Body.Add(child);
         }
 
-        Clock.OnTick += MoveBody;
+        Clock.OnPreTick += MoveBody;
     }  
 
     public void UpdateDirection(Vector2Int dir)
@@ -47,7 +49,23 @@ public class Snake : MonoBehaviour
 
     void MoveHead()
     {
-        var headCellPos = MapGrid.LocalToGrid(Body[0].anchoredPosition);
-        Body[0].anchoredPosition = MapGrid.GridToLocal(headCellPos += Direction);
+        var newHeadCell = MapGrid.LocalToGrid(Body[0].anchoredPosition) + Direction;
+        CheckNextCell(newHeadCell);
+        Body[0].anchoredPosition = MapGrid.GridToLocal(newHeadCell);
+    }
+
+    void CheckNextCell(Vector2Int cell)
+    {
+        if (cell.x > mapGrid.GridSize.x || cell.y > mapGrid.GridSize.y)
+        {
+            Debug.LogError("GameOver not implemented yet.");
+            Clock.PauseClock();
+        }
+        else if (mapGrid.Grid[cell.x, cell.y] != null && 
+            mapGrid.Grid[cell.x, cell.y].CompareTag("FoodCell"))
+        {
+            spawner.SpawnSnakeCell(Body[Body.Count - 1]);
+        }
+        
     }
 }

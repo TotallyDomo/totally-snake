@@ -9,14 +9,22 @@ public class Clock : MonoBehaviour
     float ClockSpeed = 0.7f;
     float tempTime;
 
-    public static Action OnTick;
+    public static Action OnPreTick, OnTick;
+
+    static bool Pause;
+    public static void PauseClock() => Pause = true;
+    public static void ResumeClock() => Pause = false;
 
     void Update()
     {
+        if (Pause)
+            return;
+
         tempTime += Time.smoothDeltaTime;
         if (tempTime >= ClockSpeed)
         {
             tempTime = 0f;
+            OnPreTick?.Invoke();
             OnTick?.Invoke();
         }
     }

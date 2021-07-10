@@ -6,8 +6,9 @@ using UnityEngine;
 public class MapGrid : MonoBehaviour
 {
     [SerializeField, Min(6)]
-    Vector2Int GridSize;
+    Vector2Int _gridSize;
 
+    public Vector2Int GridSize => _gridSize; 
     static public Vector2Int cellSize { get; private set; }
     RectTransform rectTransform;
 

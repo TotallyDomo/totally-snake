@@ -26,10 +26,11 @@ public class MapGrid : MonoBehaviour
 
     void UpdateGrid()
     {
+        ResetGrid();
         var children = GetComponentsInChildren<RectTransform>();
         foreach (RectTransform child in children)
         {
-            if (!child.CompareTag("GridObject") && !child.CompareTag("SnakeCell"))
+            if (!child.CompareTag("FoodCell") && !child.CompareTag("SnakeCell"))
                 continue;
 
             Vector2Int cell = LocalToGrid(child.anchoredPosition);
@@ -41,8 +42,20 @@ public class MapGrid : MonoBehaviour
         }
     }
 
+    void ResetGrid()
+    {
+        for(int x = 0; x < GridSize.x; x++)
+        {
+            for (int y = 0; y < GridSize.y; y++)
+            {
+                Grid[x, y] = null;
+            }
+        }
+    }
+
     int CellX(float x) => Mathf.RoundToInt(x / cellSize.x);
     int CellY(float y) => Mathf.RoundToInt(y / cellSize.y); 
 
     Vector2Int LocalToGrid(Vector2 localPos) => new Vector2Int(CellX(localPos.x), CellY(localPos.y));
+    Vector2Int GridToLocal(Vector2Int cellPos) => new Vector2Int(cellPos.x * cellSize.x, cellPos.y * cellSize.y);
 }

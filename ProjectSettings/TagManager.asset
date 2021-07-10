@@ -4,8 +4,8 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - GridObject
   - SnakeCell
+  - FoodCell
   layers:
   - Default
   - TransparentFX

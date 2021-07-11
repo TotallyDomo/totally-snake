@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 6723582327546335875}
   m_Layer: 5
   m_Name: SnakeCell
-  m_TagString: GridObject
+  m_TagString: SnakeCell
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

@@ -70,6 +70,12 @@ public class Snake : MonoBehaviour
             mapGrid.Grid[cell.x, cell.y] = null;
             spawner.SpawnFoodCell();
         }
+        else if (mapGrid.Grid[cell.x, cell.y] != null &&
+            mapGrid.Grid[cell.x, cell.y].CompareTag("SnakeCell"))
+        {
+            Debug.LogError("GameOver not implemented yet.");
+            Clock.PauseClock();
+        }
         
     }
 }

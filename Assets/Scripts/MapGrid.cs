@@ -3,16 +3,17 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Spawner))]
 public class MapGrid : MonoBehaviour
 {
     [SerializeField, Min(6)]
-    Vector2Int _gridSize;
+    Vector2Int gridSize;
 
-    public Vector2Int GridSize => _gridSize; 
+    public Vector2Int GridSize => gridSize;
+    public GameObject[,] Grid { get; private set; }
     static public Vector2Int cellSize { get; private set; }
     RectTransform rectTransform;
-
-    public GameObject[,] Grid { get; private set; }
+    Spawner spawner;
 
     void Awake()
     {
@@ -22,7 +23,18 @@ public class MapGrid : MonoBehaviour
             Mathf.FloorToInt(rectTransform.rect.width / GridSize.x),
             Mathf.FloorToInt(rectTransform.rect.height / GridSize.y));
 
+        UpdateGrid();
+        spawner = GetComponent<Spawner>();
+
         Clock.OnTick += UpdateGrid;
+
+    }
+
+    void Start()
+    {
+        var foodRect = spawner.SpawnFoodCell();
+        var foodCell = LocalToGrid(foodRect.anchoredPosition);
+        Grid[foodCell.x, foodCell.y] = foodRect.gameObject;
     }
 
     void UpdateGrid()
@@ -35,11 +47,10 @@ public class MapGrid : MonoBehaviour
                 continue;
 
             Vector2Int cell = LocalToGrid(child.anchoredPosition);
-            if (cell.x > GridSize.x || cell.y > GridSize.y)
+            if (cell.x >= GridSize.x || cell.y >= GridSize.y)
                 Debug.LogError("GameOver not implemented yet.");
             else
-                Grid[cell.x, cell.y] = child.gameObject;
-            //Debug.Log($"{child.anchoredPosition}: {cell.x} {cell.y}");
+                Grid[cell.x, cell.y] = child.gameObject;    
         }
     }
 

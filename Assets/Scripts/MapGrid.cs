@@ -47,10 +47,7 @@ public class MapGrid : MonoBehaviour
                 continue;
 
             Vector2Int cell = LocalToGrid(child.anchoredPosition);
-            if (cell.x >= GridSize.x || cell.y >= GridSize.y)
-                Debug.LogError("GameOver not implemented yet.");
-            else
-                Grid[cell.x, cell.y] = child.gameObject;    
+            Grid[cell.x, cell.y] = child.gameObject;    
         }
     }
 

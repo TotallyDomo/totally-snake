@@ -58,10 +58,11 @@ public class Snake : MonoBehaviour
 
     void CheckNextCell(Vector2Int cell)
     {
-        if (cell.x >= mapGrid.GridSize.x || cell.y >= mapGrid.GridSize.y)
+        if (cell.x >= mapGrid.GridSize.x || cell.x < 0 ||
+            cell.y >= mapGrid.GridSize.y || cell.y < 0 ||
+            (mapGrid.Grid[cell.x, cell.y] != null && mapGrid.Grid[cell.x, cell.y].CompareTag("SnakeCell")))
         {
-            Debug.LogError("GameOver not implemented yet.");
-            Clock.PauseClock();
+            GameManager.Instance.TriggerGameOver();
         }
         else if (mapGrid.Grid[cell.x, cell.y] != null && 
             mapGrid.Grid[cell.x, cell.y].CompareTag("FoodCell"))
@@ -71,12 +72,6 @@ public class Snake : MonoBehaviour
             Destroy(mapGrid.Grid[cell.x, cell.y]);
             mapGrid.Grid[cell.x, cell.y] = null;
             spawner.SpawnFoodCell();
-        }
-        else if (mapGrid.Grid[cell.x, cell.y] != null &&
-            mapGrid.Grid[cell.x, cell.y].CompareTag("SnakeCell"))
-        {
-            Debug.LogError("GameOver not implemented yet.");
-            Clock.PauseClock();
-        }   
+        }  
     }
 }

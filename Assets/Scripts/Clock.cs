@@ -15,6 +15,13 @@ public class Clock : MonoBehaviour
     public static void PauseClock() => Pause = true;
     public static void ResumeClock() => Pause = false;
 
+    void Awake()
+    {
+        Pause = false;
+        OnPreTick = null;
+        OnTick = null;
+    }
+
     void Update()
     {
         if (Pause)
@@ -25,7 +32,8 @@ public class Clock : MonoBehaviour
         {
             tempTime = 0f;
             OnPreTick?.Invoke();
-            OnTick?.Invoke();
+            if (!Pause)
+                OnTick?.Invoke();
         }
     }
 }

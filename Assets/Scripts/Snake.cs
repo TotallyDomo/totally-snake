@@ -52,7 +52,7 @@ public class Snake : MonoBehaviour
         lastDirection = Direction;
         var newHeadCell = mapGrid.LocalToGrid(Body[0].anchoredPosition) + Direction;
         CheckNextCell(newHeadCell);
-        Body[0].anchoredPosition = MapGrid.GridToLocal(newHeadCell);
+        Body[0].anchoredPosition = mapGrid.GridToLocal(newHeadCell);
     }
 
     void CheckNextCell(Vector2Int cell)

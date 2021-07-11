@@ -6,6 +6,7 @@ using UnityEngine;
 public class Snake : MonoBehaviour
 {
     public Vector2Int Direction { get; private set; }
+    Vector2Int lastDirection;
 
     List<RectTransform> Body;
     MapGrid mapGrid;
@@ -30,7 +31,7 @@ public class Snake : MonoBehaviour
 
     public void UpdateDirection(Vector2Int dir)
     {
-        if (Direction.x + dir.x != 0 && Direction.y + dir.y != 0)
+        if (lastDirection.x + dir.x != 0 && lastDirection.y + dir.y != 0)
             Direction = dir;
     }
 
@@ -49,6 +50,7 @@ public class Snake : MonoBehaviour
 
     void MoveHead()
     {
+        lastDirection = Direction;
         var newHeadCell = MapGrid.LocalToGrid(Body[0].anchoredPosition) + Direction;
         CheckNextCell(newHeadCell);
         Body[0].anchoredPosition = MapGrid.GridToLocal(newHeadCell);
@@ -75,7 +77,6 @@ public class Snake : MonoBehaviour
         {
             Debug.LogError("GameOver not implemented yet.");
             Clock.PauseClock();
-        }
-        
+        }   
     }
 }

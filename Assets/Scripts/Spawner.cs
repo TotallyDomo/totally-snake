@@ -16,7 +16,7 @@ public class Spawner : MonoBehaviour
 
     public RectTransform SpawnSnakeCell(RectTransform cell)
     {
-        if (!ValidateInput(MapGrid.LocalToGrid(cell.anchoredPosition)))
+        if (!ValidateInput(mapGrid.LocalToGrid(cell.anchoredPosition)))
             return null;
 
         var go = Instantiate(SnakeCellPrefab, mapGrid.transform);
@@ -31,7 +31,7 @@ public class Spawner : MonoBehaviour
         var rect = go.GetComponent<RectTransform>();
         var cells = FindPossibleCells();
         int randInt = Random.Range(0, cells.Count);
-        rect.anchoredPosition = MapGrid.GridToLocal(cells[randInt]);
+        rect.anchoredPosition = mapGrid.GridToLocal(cells[randInt]);
         return rect;
     }
 

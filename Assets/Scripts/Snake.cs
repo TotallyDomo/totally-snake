@@ -50,7 +50,7 @@ public class Snake : MonoBehaviour
     void MoveHead()
     {
         lastDirection = Direction;
-        var newHeadCell = MapGrid.LocalToGrid(Body[0].anchoredPosition) + Direction;
+        var newHeadCell = mapGrid.LocalToGrid(Body[0].anchoredPosition) + Direction;
         CheckNextCell(newHeadCell);
         Body[0].anchoredPosition = MapGrid.GridToLocal(newHeadCell);
     }

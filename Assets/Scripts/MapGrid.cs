@@ -8,7 +8,7 @@ public class MapGrid : MonoBehaviour
 
     public Vector2Int GridSize => gridSize;
     public GameObject[,] Grid { get; private set; }
-    static public Vector2Int cellSize { get; private set; }
+    public Vector2Int cellSize { get; private set; }
     RectTransform rectTransform;
     Spawner spawner;
 
@@ -59,9 +59,9 @@ public class MapGrid : MonoBehaviour
         }
     }
 
-    static int CellX(float x) => Mathf.RoundToInt(x / cellSize.x);
-    static int CellY(float y) => Mathf.RoundToInt(y / cellSize.y); 
+    int CellX(float x) => Mathf.RoundToInt(x / cellSize.x);
+    int CellY(float y) => Mathf.RoundToInt(y / cellSize.y); 
 
-    static public Vector2Int LocalToGrid(Vector2 localPos) => new Vector2Int(CellX(localPos.x), CellY(localPos.y));
-    static public Vector2Int GridToLocal(Vector2Int cellPos) => new Vector2Int(cellPos.x * cellSize.x, cellPos.y * cellSize.y);
+    public Vector2Int LocalToGrid(Vector2 localPos) => new Vector2Int(CellX(localPos.x), CellY(localPos.y));
+    public Vector2Int GridToLocal(Vector2Int cellPos) => new Vector2Int(cellPos.x * cellSize.x, cellPos.y * cellSize.y);
 }

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 [RequireComponent(typeof(Spawner))]
@@ -44,13 +45,13 @@ public class MapGrid : MonoBehaviour
                 continue;
 
             Vector2Int cell = LocalToGrid(child.anchoredPosition);
-            Grid[cell.x, cell.y] = child.gameObject;    
+            Grid[cell.x, cell.y] = child.gameObject;
         }
     }
 
     void ResetGrid()
     {
-        for(int x = 0; x < GridSize.x; x++)
+        for (int x = 0; x < GridSize.x; x++)
         {
             for (int y = 0; y < GridSize.y; y++)
             {
@@ -60,8 +61,20 @@ public class MapGrid : MonoBehaviour
     }
 
     int CellX(float x) => Mathf.RoundToInt(x / cellSize.x);
-    int CellY(float y) => Mathf.RoundToInt(y / cellSize.y); 
+    int CellY(float y) => Mathf.RoundToInt(y / cellSize.y);
 
-    public Vector2Int LocalToGrid(Vector2 localPos) => new Vector2Int(CellX(localPos.x), CellY(localPos.y));
-    public Vector2Int GridToLocal(Vector2Int cellPos) => new Vector2Int(cellPos.x * cellSize.x, cellPos.y * cellSize.y);
+    public Vector2Int LocalToGrid(Vector2 localPos)
+    {
+        if (localPos.x < 0f || localPos.y < 0f)
+            throw new ArgumentException("Negative world positions are not supported.");
+
+        return new Vector2Int(CellX(localPos.x), CellY(localPos.y));
+    }
+    public Vector2Int GridToLocal(Vector2Int cellPos)
+    {
+        if (cellPos.x < 0 || cellPos.y < 0)
+            throw new ArgumentException("Cell position can't be negative.");
+
+        return new Vector2Int(cellPos.x * cellSize.x, cellPos.y * cellSize.y);
+    }
 }

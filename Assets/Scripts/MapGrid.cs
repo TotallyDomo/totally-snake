@@ -1,9 +1,10 @@
 using System;
 using UnityEngine;
 
-[RequireComponent(typeof(Spawner))]
 public class MapGrid : MonoBehaviour
 {
+    public static MapGrid Instance;
+
     [SerializeField, Min(6)]
     Vector2Int gridSize;
 
@@ -11,10 +12,16 @@ public class MapGrid : MonoBehaviour
     public GameObject[,] Grid { get; private set; }
     public Vector2Int cellSize { get; private set; }
     RectTransform rectTransform;
-    Spawner spawner;
+
+    public static Action OnFoodTaken;
 
     void Awake()
     {
+        if (Instance != null)
+            Destroy(gameObject);
+        Instance = this;
+        OnFoodTaken = null;
+
         Grid = new GameObject[GridSize.x, GridSize.y];
         rectTransform = GetComponent<RectTransform>();
         cellSize = new Vector2Int(
@@ -22,17 +29,11 @@ public class MapGrid : MonoBehaviour
             Mathf.FloorToInt(rectTransform.rect.height / GridSize.y));
 
         UpdateGrid();
-        spawner = GetComponent<Spawner>();
-
-        Clock.OnTick += UpdateGrid;
-
     }
 
     void Start()
     {
-        var foodRect = spawner.SpawnFoodCell();
-        var foodCell = LocalToGrid(foodRect.anchoredPosition);
-        Grid[foodCell.x, foodCell.y] = foodRect.gameObject;
+        Clock.OnTick += UpdateGrid;
     }
 
     void UpdateGrid()
@@ -45,7 +46,8 @@ public class MapGrid : MonoBehaviour
                 continue;
 
             Vector2Int cell = LocalToGrid(child.anchoredPosition);
-            Grid[cell.x, cell.y] = child.gameObject;
+            if (CheckCell(cell, child))
+                Grid[cell.x, cell.y] = child.gameObject;
         }
     }
 
@@ -58,6 +60,38 @@ public class MapGrid : MonoBehaviour
                 Grid[x, y] = null;
             }
         }
+    }
+
+    bool CheckCell(Vector2Int cell, RectTransform child)
+    {
+        if (cell.x >= GridSize.x || cell.x < 0 ||
+            cell.y >= GridSize.y || cell.y < 0)
+        {
+            GameManager.Instance.TriggerGameOver();
+            return false;
+        }
+        else if (Grid[cell.x, cell.y] == null)
+            return true;
+
+        var obj = Grid[cell.x, cell.y];
+        if (obj.CompareTag("SnakeCell") && child.CompareTag("SnakeCell"))
+        {
+            GameManager.Instance.TriggerGameOver();
+            return false;
+        }
+        else if (obj.CompareTag("FoodCell") && child.CompareTag("SnakeCell"))
+        {
+            Destroy(obj);
+            Grid[cell.x, cell.y] = null;
+            OnFoodTaken?.Invoke();
+        }
+        else if (obj.CompareTag("SnakeCell") && child.CompareTag("FoodCell"))
+        {
+            Destroy(child.gameObject);
+            OnFoodTaken?.Invoke();
+            return false;
+        }
+        return true;
     }
 
     int CellX(float x) => Mathf.RoundToInt(x / cellSize.x);

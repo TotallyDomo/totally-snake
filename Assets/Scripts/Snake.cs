@@ -1,22 +1,21 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(MapGrid), typeof(Spawner))]
 public class Snake : MonoBehaviour
 {
     public Vector2Int Direction { get; private set; }
-    Vector2Int lastDirection;
+
+    [SerializeField]
+    GameObject SnakeCellPrefab;
 
     List<RectTransform> Body;
-    MapGrid mapGrid;
-    Spawner spawner;
+    Vector2Int lastDirection, headCell;
+    Vector2 prevPos;
 
     void Awake()
     {
         Direction = new Vector2Int(0, 1);
         Body = new List<RectTransform>();
-        mapGrid = GetComponent<MapGrid>();
-        spawner = GetComponent<Spawner>();
 
         // Fancy way of iterating over all child-objects
         foreach (RectTransform child in transform)
@@ -24,9 +23,14 @@ public class Snake : MonoBehaviour
             if (child.CompareTag("SnakeCell"))
                 Body.Add(child);
         }
+        headCell = MapGrid.Instance.LocalToGrid(Body[0].anchoredPosition);
+    }
 
+    void Start()
+    {
         Clock.OnPreTick += MoveBody;
-    }  
+        MapGrid.OnFoodTaken += SpawnSnakeCell;
+    }
 
     public void UpdateDirection(Vector2Int dir)
     {
@@ -36,7 +40,7 @@ public class Snake : MonoBehaviour
 
     void MoveBody()
     {
-        var prevPos = Body[0].anchoredPosition;
+        prevPos = Body[0].anchoredPosition;
         MoveHead();
 
         for (int i = 1; i < Body.Count; i++)
@@ -46,31 +50,18 @@ public class Snake : MonoBehaviour
             prevPos = tempPos;
         }
     }
-
     void MoveHead()
     {
         lastDirection = Direction;
-        var newHeadCell = mapGrid.LocalToGrid(Body[0].anchoredPosition) + Direction;
-        CheckNextCell(newHeadCell);
-        Body[0].anchoredPosition = mapGrid.GridToLocal(newHeadCell);
+        headCell += Direction;
+        Body[0].anchoredPosition = MapGrid.Instance.GridToLocal(headCell);
     }
 
-    void CheckNextCell(Vector2Int cell)
+    public void SpawnSnakeCell()
     {
-        if (cell.x >= mapGrid.GridSize.x || cell.x < 0 ||
-            cell.y >= mapGrid.GridSize.y || cell.y < 0 ||
-            (mapGrid.Grid[cell.x, cell.y] != null && mapGrid.Grid[cell.x, cell.y].CompareTag("SnakeCell")))
-        {
-            GameManager.Instance.TriggerGameOver();
-        }
-        else if (mapGrid.Grid[cell.x, cell.y] != null && 
-            mapGrid.Grid[cell.x, cell.y].CompareTag("FoodCell"))
-        {
-            var newCell = spawner.SpawnSnakeCell(Body[Body.Count - 1]);
-            Body.Add(newCell);
-            Destroy(mapGrid.Grid[cell.x, cell.y]);
-            mapGrid.Grid[cell.x, cell.y] = null;
-            spawner.SpawnFoodCell();
-        }  
+        var go = Instantiate(SnakeCellPrefab, MapGrid.Instance.transform);
+        var rect = go.GetComponent<RectTransform>();
+        rect.anchoredPosition = prevPos;
+        Body.Add(rect);
     }
 }

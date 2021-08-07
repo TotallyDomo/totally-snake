@@ -4,7 +4,9 @@ using System;
 public class Clock : MonoBehaviour
 {
     [SerializeField, Min(0.1f)]
-    float ClockSpeed = 0.7f;
+    float clockSpeed = 0.7f;
+    public float ClockSpeed => clockSpeed;
+
     float tempTime;
 
     public static Action OnPreTick, OnTick;
@@ -25,7 +27,7 @@ public class Clock : MonoBehaviour
         if (Pause)
             return;
 
-        tempTime += Time.smoothDeltaTime;
+        tempTime += Time.deltaTime;
         if (tempTime >= ClockSpeed)
         {
             tempTime = 0f;

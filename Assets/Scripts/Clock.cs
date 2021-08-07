@@ -8,19 +8,19 @@ public class Clock : MonoBehaviour
     public float ClockSpeed => clockSpeed;
 
     [SerializeField, Min(0f)]
-    float SpeedIncreaseStep = 0.03f;
+    float speedIncreaseStep = 0.03f;
 
     float tempTime;
 
     public static Action OnPreTick, OnTick;
 
-    static bool Pause;
-    public static void PauseClock() => Pause = true;
-    public static void ResumeClock() => Pause = false;
+    static bool pause;
+    public static void PauseClock() => pause = true;
+    public static void ResumeClock() => pause = false;
 
     void Awake()
     {
-        Pause = false;
+        pause = false;
         OnPreTick = null;
         OnTick = null;
     }
@@ -32,7 +32,7 @@ public class Clock : MonoBehaviour
 
     void Update()
     {
-        if (Pause)
+        if (pause)
             return;
 
         tempTime += Time.deltaTime;
@@ -40,14 +40,14 @@ public class Clock : MonoBehaviour
         {
             tempTime = 0f;
             OnPreTick?.Invoke();
-            if (!Pause)
+            if (!pause)
                 OnTick?.Invoke();
         }
     }
 
     void IncreaseClockSpeed()
     {
-        clockSpeed = Mathf.Max(0.1f, clockSpeed - SpeedIncreaseStep);
+        clockSpeed = Mathf.Max(0.1f, clockSpeed - speedIncreaseStep);
     }
 
     void OnDestroy()

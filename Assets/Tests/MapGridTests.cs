@@ -37,7 +37,7 @@ public class MapGridTests
         Assert.AreEqual(localPos, Vector2Int.zero);
 
         localPos = mapGrid.GridToLocal(Vector2Int.one);
-        Assert.AreEqual(localPos, new Vector2Int(mapGrid.cellSize.x, mapGrid.cellSize.y));
+        Assert.AreEqual(localPos, new Vector2Int(mapGrid.CellSize.x, mapGrid.CellSize.y));
 
         var gridRect = mapGrid.GetComponent<RectTransform>();
         localPos = mapGrid.GridToLocal(new Vector2Int(mapGrid.GridSize.x, mapGrid.GridSize.y));

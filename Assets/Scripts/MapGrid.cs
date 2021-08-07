@@ -9,8 +9,8 @@ public class MapGrid : MonoBehaviour
     Vector2Int gridSize;
 
     public Vector2Int GridSize => gridSize;
-    public GameObject[,] Grid { get; private set; }
-    public Vector2Int cellSize { get; private set; }
+    public GameObject[,] Grid { get; private set; } 
+    public Vector2Int CellSize { get; private set; }
     RectTransform rectTransform;
 
     public static Action OnFoodTaken;
@@ -24,7 +24,7 @@ public class MapGrid : MonoBehaviour
         OnFoodTaken = null;
         Grid = new GameObject[GridSize.x, GridSize.y];
         rectTransform = GetComponent<RectTransform>();
-        cellSize = new Vector2Int(
+        CellSize = new Vector2Int(
             Mathf.FloorToInt(rectTransform.rect.width / GridSize.x),
             Mathf.FloorToInt(rectTransform.rect.height / GridSize.y));
 
@@ -95,9 +95,9 @@ public class MapGrid : MonoBehaviour
         return true;
     }
 
-    int CellX(float x) => Mathf.RoundToInt(x / cellSize.x);
-    int CellY(float y) => Mathf.RoundToInt(y / cellSize.y);
+    int CellX(float x) => Mathf.RoundToInt(x / CellSize.x);
+    int CellY(float y) => Mathf.RoundToInt(y / CellSize.y);
 
     public Vector2Int LocalToGrid(Vector2 localPos) => new Vector2Int(CellX(localPos.x), CellY(localPos.y));
-    public Vector2Int GridToLocal(Vector2Int cellPos) => new Vector2Int(cellPos.x * cellSize.x, cellPos.y * cellSize.y);
+    public Vector2Int GridToLocal(Vector2Int cellPos) => new Vector2Int(cellPos.x * CellSize.x, cellPos.y * CellSize.y);
 }

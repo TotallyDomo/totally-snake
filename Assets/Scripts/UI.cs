@@ -19,7 +19,8 @@ public class UI : MonoBehaviour
     {
         if (Instance != null)
             Destroy(gameObject);
-        Instance = this;
+        else
+            Instance = this;
     }
 
 

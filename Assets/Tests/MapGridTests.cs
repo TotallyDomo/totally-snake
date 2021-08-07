@@ -1,10 +1,6 @@
-using System.Collections;
-using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
-using UnityEngine.TestTools;
 using UnityEditor;
-using System;
 
 public class MapGridTests
 {
@@ -35,13 +31,6 @@ public class MapGridTests
     }
 
     [Test]
-    public void LocalToGrid_ThrowsArgumentException_WithNegativeCoordinates()
-    {
-        Assert.That(() => mapGrid.LocalToGrid(new Vector2(-100f, -100f)),
-            Throws.TypeOf<ArgumentException>());
-    }
-
-    [Test]
     public void GridToLocal_Works_WithPositiveCoordinates()
     {
         var localPos = mapGrid.GridToLocal(Vector2Int.zero);
@@ -53,12 +42,5 @@ public class MapGridTests
         var gridRect = mapGrid.GetComponent<RectTransform>();
         localPos = mapGrid.GridToLocal(new Vector2Int(mapGrid.GridSize.x, mapGrid.GridSize.y));
         Assert.AreEqual(localPos, new Vector2Int((int)gridRect.rect.width, (int)gridRect.rect.height));
-    }
-
-    [Test]
-    public void GridToLocal_ThrowsArgumentException_WithNegativeCoordinates()
-    {
-        Assert.That(() => mapGrid.GridToLocal(new Vector2Int(-1, -1)),
-            Throws.TypeOf<ArgumentException>());
     }
 }

@@ -99,16 +99,10 @@ public class MapGrid : MonoBehaviour
 
     public Vector2Int LocalToGrid(Vector2 localPos)
     {
-        if (localPos.x < 0f || localPos.y < 0f)
-            throw new ArgumentException("Negative world positions are not supported.");
-
         return new Vector2Int(CellX(localPos.x), CellY(localPos.y));
     }
     public Vector2Int GridToLocal(Vector2Int cellPos)
     {
-        if (cellPos.x < 0 || cellPos.y < 0)
-            throw new ArgumentException("Cell position can't be negative.");
-
         return new Vector2Int(cellPos.x * cellSize.x, cellPos.y * cellSize.y);
     }
 }

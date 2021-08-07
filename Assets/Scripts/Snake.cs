@@ -14,8 +14,9 @@ public class Snake : MonoBehaviour
 
     void Awake()
     {
-        Direction = new Vector2Int(0, 1);
+        Direction = Vector2Int.up;
         Body = new List<RectTransform>();
+        lastDirection = Direction;
 
         // Fancy way of iterating over all child-objects
         foreach (RectTransform child in transform)
@@ -23,7 +24,8 @@ public class Snake : MonoBehaviour
             if (child.CompareTag("SnakeCell"))
                 Body.Add(child);
         }
-        headCell = MapGrid.Instance.LocalToGrid(Body[0].anchoredPosition);
+        if (Body.Count != 0)
+            headCell = MapGrid.Instance.LocalToGrid(Body[0].anchoredPosition);
     }
 
     void Start()

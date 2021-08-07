@@ -19,9 +19,9 @@ public class MapGrid : MonoBehaviour
     {
         if (Instance != null)
             Destroy(gameObject);
+
         Instance = this;
         OnFoodTaken = null;
-
         Grid = new GameObject[GridSize.x, GridSize.y];
         rectTransform = GetComponent<RectTransform>();
         cellSize = new Vector2Int(
@@ -84,6 +84,7 @@ public class MapGrid : MonoBehaviour
             Destroy(obj);
             Grid[cell.x, cell.y] = null;
             OnFoodTaken?.Invoke();
+            return true;
         }
         else if (obj.CompareTag("SnakeCell") && child.CompareTag("FoodCell"))
         {
@@ -97,12 +98,6 @@ public class MapGrid : MonoBehaviour
     int CellX(float x) => Mathf.RoundToInt(x / cellSize.x);
     int CellY(float y) => Mathf.RoundToInt(y / cellSize.y);
 
-    public Vector2Int LocalToGrid(Vector2 localPos)
-    {
-        return new Vector2Int(CellX(localPos.x), CellY(localPos.y));
-    }
-    public Vector2Int GridToLocal(Vector2Int cellPos)
-    {
-        return new Vector2Int(cellPos.x * cellSize.x, cellPos.y * cellSize.y);
-    }
+    public Vector2Int LocalToGrid(Vector2 localPos) => new Vector2Int(CellX(localPos.x), CellY(localPos.y));
+    public Vector2Int GridToLocal(Vector2Int cellPos) => new Vector2Int(cellPos.x * cellSize.x, cellPos.y * cellSize.y);
 }

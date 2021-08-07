@@ -24,7 +24,6 @@ public class UI : MonoBehaviour
 
 
     public void OnStartClick() => SceneManager.LoadScene(1);
-    public void OnOptionsClick() => Debug.LogWarning("Options are not implemented yet");
     public void OnSourceClick() => Application.OpenURL(SOURCE_URL);
     public void OnBackToMenuClick() => SceneManager.LoadScene(0);
     public void SetScore(int score) => scoreText.SetText("SCORE: {0}", score);

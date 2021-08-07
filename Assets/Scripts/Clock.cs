@@ -4,8 +4,11 @@ using System;
 public class Clock : MonoBehaviour
 {
     [SerializeField, Min(0.1f)]
-    float clockSpeed = 0.7f;
+    float clockSpeed = 0.5f;
     public float ClockSpeed => clockSpeed;
+
+    [SerializeField, Min(0f)]
+    float SpeedIncreaseStep = 0.03f;
 
     float tempTime;
 
@@ -22,6 +25,11 @@ public class Clock : MonoBehaviour
         OnTick = null;
     }
 
+    void Start()
+    {
+        MapGrid.OnFoodTaken += IncreaseClockSpeed;
+    }
+
     void Update()
     {
         if (Pause)
@@ -35,5 +43,15 @@ public class Clock : MonoBehaviour
             if (!Pause)
                 OnTick?.Invoke();
         }
+    }
+
+    void IncreaseClockSpeed()
+    {
+        clockSpeed = Mathf.Max(0.1f, clockSpeed - SpeedIncreaseStep);
+    }
+
+    void OnDestroy()
+    {
+        MapGrid.OnFoodTaken -= IncreaseClockSpeed;
     }
 }

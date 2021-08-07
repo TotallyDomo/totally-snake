@@ -10,6 +10,10 @@ public class Clock : MonoBehaviour
     [SerializeField, Min(0f)]
     float speedIncreaseStep = 0.03f;
 
+    [SerializeField, Min(0.08f)]
+    float minimalClockSpeed = 0.08f;
+    public float MinimalClockSpeed => minimalClockSpeed;
+
     float tempTime;
 
     public static Action OnPreTick, OnTick;
@@ -47,7 +51,7 @@ public class Clock : MonoBehaviour
 
     void IncreaseClockSpeed()
     {
-        clockSpeed = Mathf.Max(0.1f, clockSpeed - speedIncreaseStep);
+        clockSpeed = Mathf.Max(minimalClockSpeed, clockSpeed - speedIncreaseStep);
     }
 
     void OnDestroy()
